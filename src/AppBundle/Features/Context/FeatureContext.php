@@ -11,13 +11,6 @@ use Behat\Behat\Context\BehatContext,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
-//
-// Require 3rd-party libraries here:
-//
-//   require_once 'PHPUnit/Autoload.php';
-//   require_once 'PHPUnit/Framework/Assert/Functions.php';
-//
-
 /**
  * Feature context.
  */
@@ -48,26 +41,13 @@ class FeatureContext extends MinkContext //MinkContext if you want to test web
         $this->kernel = $kernel;
     }
 
-//
-// Place your definition and hook methods here:
-//
-//    /**
-//     * @Given /^I have done something with "([^"]*)"$/
-//     */
-//    public function iHaveDoneSomethingWith($argument)
-//    {
-//        $container = $this->kernel->getContainer();
-//        $container->get('some_service')->doSomethingWith($argument);
-//    }
-//
-
     /**
      * @Given /^there are the following users:$/
      */
     public function thereAreTheFollowingUsers(TableNode $table)
     {
         $userManager = $this->kernel->getContainer()->get('fos_user.user_manager');
-    
+
 	foreach ($table->getHash() as $hash) {
 	    $user = $userManager->createUser();
         $user->setName($hash['name']);
@@ -75,7 +55,7 @@ class FeatureContext extends MinkContext //MinkContext if you want to test web
 	    $user->setPlainPassword($hash['password']);
 	    $user->setEmail($hash['email']);
 	    $user->setEnabled(true);
-	    $userManager->updateUser($user);	    
+	    $userManager->updateUser($user);
 	}
     }
 
@@ -84,8 +64,37 @@ class FeatureContext extends MinkContext //MinkContext if you want to test web
      */
     public function theDatabaseIsClean()
     {
-	$em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-	$em->createQuery('DELETE AppBundle:User')->execute();
-	$em->flush();
+        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $em->createQuery('DELETE AppBundle:User')->execute();
+        $em->flush();
+    }
+
+
+    /**
+     * @Given /^I should be authenticated as a "([^"]*)"$/
+     */
+    public function iShouldBeAuthenticatedAsA($userType)
+    {
+        $expectedRole = $this->getRole($userType);
+
+        $user = $this->kernel->getContainer()->get('security.token_storage')->getToken()->getUser();
+
+        if ( ! in_array($expectedRole, $user->getRoles())) {
+            throw new \LogicException(sprintf("User is not authenticated as a %s", $userType));
+        }
+    }
+
+    private function getRole($userType)
+    {
+        switch (strtolower($userType)) {
+            case 'administrator':
+                return 'ROLE_ADMIN';
+            case 'teacher':
+                return 'ROLE_TEACHER';
+            case 'student':
+                return 'ROLE_STUDENT';
+            default:
+                return 'ROLE_USER';
+        }
     }
 }

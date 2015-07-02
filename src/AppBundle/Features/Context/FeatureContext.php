@@ -70,6 +70,7 @@ class FeatureContext extends MinkContext //MinkContext if you want to test web
     
 	foreach ($table->getHash() as $hash) {
 	    $user = $userManager->createUser();
+        $user->setName($hash['name']);
 	    $user->setUsername($hash['username']);
 	    $user->setPlainPassword($hash['password']);
 	    $user->setEmail($hash['email']);

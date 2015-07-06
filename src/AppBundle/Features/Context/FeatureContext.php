@@ -14,8 +14,7 @@ use Behat\Gherkin\Node\PyStringNode,
 /**
  * Feature context.
  */
-class FeatureContext extends MinkContext //MinkContext if you want to test web
-                  implements KernelAwareInterface
+class FeatureContext extends MinkContext implements KernelAwareInterface
 {
     private $kernel;
     private $parameters;
@@ -71,7 +70,7 @@ class FeatureContext extends MinkContext //MinkContext if you want to test web
 
 
     /**
-     * @Given /^I should be authenticated as a "([^"]*)"$/
+     * @Given /^I should be authenticated as [a|an] "([^"]*)"$/
      */
     public function iShouldBeAuthenticatedAsA($userType)
     {

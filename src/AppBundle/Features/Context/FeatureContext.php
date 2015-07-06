@@ -47,15 +47,15 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         $userManager = $this->kernel->getContainer()->get('fos_user.user_manager');
 
-	foreach ($table->getHash() as $hash) {
-	    $user = $userManager->createUser();
-        $user->setName($hash['name']);
-	    $user->setUsername($hash['username']);
-	    $user->setPlainPassword($hash['password']);
-	    $user->setEmail($hash['email']);
-	    $user->setEnabled(true);
-	    $userManager->updateUser($user);
-	}
+        foreach ($table->getHash() as $hash) {
+            $user = $userManager->createUser();
+            $user->setName($hash['name']);
+            $user->setUsername($hash['username']);
+            $user->setPlainPassword($hash['password']);
+            $user->setEmail($hash['email']);
+            $user->setEnabled(true);
+            $userManager->updateUser($user);
+        }
     }
 
     /**

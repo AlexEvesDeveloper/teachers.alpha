@@ -3,6 +3,3 @@ Feature: Create, read, update and delete categories
   As an administrator
   I want to create and edit tasks
 
-  Background:
-    Given the database is clean
-

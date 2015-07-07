@@ -2,14 +2,14 @@
 
 namespace AppBundle\Features\Context;
 
+use AppBundle\Entity;
+use AppBundle\Entity\Teacher;
+use AppBundle\Entity\Student;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
-
-use Behat\Behat\Context\BehatContext,
-    Behat\Behat\Exception\PendingException;
-use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 
 /**
  * Feature context.
@@ -48,7 +48,8 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $userManager = $this->kernel->getContainer()->get('fos_user.user_manager');
 
         foreach ($table->getHash() as $hash) {
-            $user = $userManager->createUser();
+            $class = sprintf('AppBundle\Entity\%s', $hash['type']);
+            $user = new $class();
             $user->setName($hash['name']);
             $user->setUsername($hash['username']);
             $user->setPlainPassword($hash['password']);
@@ -98,22 +99,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^there is the following activity:$/
-     */
-    public function thereIsTheFollowingActivity(TableNode $table)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Given /^it has the following competencies:$/
-     */
-    public function itHasTheFollowingCompetencies(TableNode $table)
-    {
-        throw new PendingException();
-    }
-
-    /**
      * @Given /^all competencies have a grade of "([^"]*)"$/
      */
     public function allCompetenciesHaveAGradeOf($arg1)
@@ -128,4 +113,40 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         throw new PendingException();
     }
+
+    /**
+     * @Given /^"([^"]*)" has a "([^"]*)" activity$/
+     */
+    public function hasAActivity($arg1, $arg2)
+    {
+        // Fetch the Student
+        $student = $this->kernel->getContainer()->get('doctrine')->getRepository('AppBundle:Student')->findByName($arg1);
+
+        print $student->getEmail();
+        exit;
+        // Create the Activity
+        //$activity = $this->buildActivity($activityTitle);
+    }
+
+
+//    private function buildActivity($title)
+//    {
+//        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
+//        $activity = new Entity\Activity();
+//        $activity->setTitle($title);
+//        $em->persist($activity);
+//        $em->flush();
+//
+//        return $activity;
+//    }
+
+    /**
+     * @Given /^all "([^"]*)" competencies for "([^"]*)" have a grade of "([^"]*)"$/
+     */
+    public function allCompetenciesForHaveAGradeOf($arg1, $arg2, $arg3)
+    {
+        throw new PendingException();
+    }
+
+
 }

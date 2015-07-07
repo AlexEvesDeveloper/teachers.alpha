@@ -96,4 +96,36 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
                 return 'ROLE_USER';
         }
     }
+
+    /**
+     * @Given /^there is the following activity:$/
+     */
+    public function thereIsTheFollowingActivity(TableNode $table)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^it has the following competencies:$/
+     */
+    public function itHasTheFollowingCompetencies(TableNode $table)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^all competencies have a grade of "([^"]*)"$/
+     */
+    public function allCompetenciesHaveAGradeOf($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Given /^I am logged in as a "([^"]*)"$/
+     */
+    public function iAmLoggedInAsA($arg1)
+    {
+        throw new PendingException();
+    }
 }

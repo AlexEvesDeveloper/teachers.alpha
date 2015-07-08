@@ -35,6 +35,10 @@ class Competency
      */
     private $currentGrade;
 
+    public function __construct()
+    {
+        $this->currentGrade = 0;
+    }
 
     /**
      * Get id

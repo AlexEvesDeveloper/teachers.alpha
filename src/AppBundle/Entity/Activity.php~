@@ -114,37 +114,4 @@ class Activity
     {
         return $this->students;
     }
-
-    /**
-     * Add competencies
-     *
-     * @param Competency $competencies
-     * @return Activity
-     */
-    public function addCompetency(Competency $competencies)
-    {
-        $this->competencies[] = $competencies;
-
-        return $this;
-    }
-
-    /**
-     * Remove competencies
-     *
-     * @param Competency $competencies
-     */
-    public function removeCompetency(Competency $competencies)
-    {
-        $this->competencies->removeElement($competencies);
-    }
-
-    /**
-     * Get competencies
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCompetencies()
-    {
-        return $this->competencies;
-    }
 }

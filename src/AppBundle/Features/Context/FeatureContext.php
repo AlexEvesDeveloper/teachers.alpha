@@ -66,6 +66,10 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
         $em->createQuery('DELETE AppBundle:User')->execute();
+        $em->createQuery('DELETE AppBundle:Teacher')->execute();
+        $em->createQuery('DELETE AppBundle:Student')->execute();
+        $em->createQuery('DELETE AppBundle:Activity')->execute();
+        $em->createQuery('DELETE AppBundle:Competency')->execute();
         $em->flush();
     }
 
@@ -99,11 +103,46 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
-     * @Given /^all competencies have a grade of "([^"]*)"$/
+     * @Given /^"([^"]*)" has a "([^"]*)" activity$/
+     * @param $studentName
+     * @param $activityName
      */
-    public function allCompetenciesHaveAGradeOf($arg1)
+    public function hasAActivity($studentName, $activityName)
     {
-        throw new PendingException();
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository('AppBundle:Student');
+
+        // Fetch the Student.
+        $student = $repo->findOneByName($studentName);
+
+        // Create the Activity.
+        $activity = $this->buildActivity($activityName);
+
+        // Connect the two.
+        $student->addActivity($activity);
+        $em->persist($student);
+        $em->flush();
+    }
+
+    /**
+     * @Given /^all "([^"]*)" competencies for "([^"]*)" have a grade of "([^"]*)"$/
+     */
+    public function allCompetenciesForHaveAGradeOf($activity, $student, $grade)
+    {
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository('AppBundle:Student');
+
+        // Get the Student.
+        $student = $repo->findOneByName($student);
+
+        // Get the given activity that belongs to them.
+        $activity = $student->findOneActivityByTitle()
+
+        // Update the grades.
+
+        // Persist.
     }
 
     /**
@@ -114,39 +153,47 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         throw new PendingException();
     }
 
-    /**
-     * @Given /^"([^"]*)" has a "([^"]*)" activity$/
-     */
-    public function hasAActivity($arg1, $arg2)
+    private function buildActivity($title)
     {
-        // Fetch the Student
-        $student = $this->kernel->getContainer()->get('doctrine')->getRepository('AppBundle:Student')->findByName($arg1);
+        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
+        $activity = new Entity\Activity();
+        $activity->setTitle($title);
 
-        print $student->getEmail();
-        exit;
-        // Create the Activity
-        //$activity = $this->buildActivity($activityTitle);
+        // Build and attach the default Competencies
+        $this->attachCompetencies($activity);
+
+        $em->persist($activity);
+        $em->flush();
+
+        return $activity;
     }
 
-
-//    private function buildActivity($title)
-//    {
-//        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
-//        $activity = new Entity\Activity();
-//        $activity->setTitle($title);
-//        $em->persist($activity);
-//        $em->flush();
-//
-//        return $activity;
-//    }
-
     /**
-     * @Given /^all "([^"]*)" competencies for "([^"]*)" have a grade of "([^"]*)"$/
+     * @param Entity\Activity $activity
      */
-    public function allCompetenciesForHaveAGradeOf($arg1, $arg2, $arg3)
+    private function attachCompetencies(Entity\Activity $activity)
     {
-        throw new PendingException();
+        switch ($activity->getTitle()) {
+            case 'Basketball':
+                $competencyList = array('Dribbling', 'Passing', 'Rebounding', 'Shooting', 'Defending', 'Gameplay', 'Tactics/Challenges');
+                break;
+            default:
+                $competencyList = array();
+        }
+
+        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
+
+        if ( ! empty($competencyList)) {
+            foreach ($competencyList as $competencyTitle) {
+                $competency = new Entity\Competency();
+                $competency->setTitle($competencyTitle);
+                $em->persist($competency);
+
+                $activity->addCompetency($competency);
+                $em->persist($activity);
+            }
+        }
+
+        $em->flush();
     }
-
-
 }

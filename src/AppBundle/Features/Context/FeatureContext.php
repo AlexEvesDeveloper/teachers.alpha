@@ -49,6 +49,20 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     }
 
     /**
+     * @Given /^the database is clean$/
+     */
+    public function theDatabaseIsClean()
+    {
+        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $em->createQuery('DELETE AppBundle:Competency')->execute();
+        $em->createQuery('DELETE AppBundle:Activity')->execute();
+        $em->createQuery('DELETE AppBundle:User')->execute();
+        $em->createQuery('DELETE AppBundle:Teacher')->execute();
+        $em->createQuery('DELETE AppBundle:Student')->execute();
+        $em->flush();
+    }
+
+    /**
      * @Given /^there are the following users:$/
      */
     public function thereAreTheFollowingUsers(TableNode $table)
@@ -66,21 +80,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             $userManager->updateUser($user);
         }
     }
-
-    /**
-     * @Given /^the database is clean$/
-     */
-    public function theDatabaseIsClean()
-    {
-        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $em->createQuery('DELETE AppBundle:Competency')->execute();
-        $em->createQuery('DELETE AppBundle:Activity')->execute();
-        $em->createQuery('DELETE AppBundle:User')->execute();
-        $em->createQuery('DELETE AppBundle:Teacher')->execute();
-        $em->createQuery('DELETE AppBundle:Student')->execute();
-        $em->flush();
-    }
-
 
     /**
      * @Given /^I should be authenticated as [a|an] "([^"]*)"$/

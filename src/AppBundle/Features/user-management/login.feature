@@ -1,18 +1,18 @@
-#Feature: Log in to the application
-#  In order to access the application
-#  As a visitor
-#  I need to be able to log in
-#
-#  Background:
-#    Given the database is clean
-#    And there are the following users:
-#      | name    | username  | email       | password  |
-#      | Bar     | bar       | bar@foo.com | foo       |
-#
-#  Scenario: Log in as admin
-#    Given I am on homepage
+Feature: Log in to the application
+  In order to access the application
+  As a visitor
+  I need to be able to log in
+
+  Background:
+    Given the database is clean
+    And there are the following users:
+      | name    | username  | email       | password  | type    |
+      | Bar     | bar       | bar@foo.com | foo       | Teacher |
+
+  Scenario: Log in as admin
+    Given I am on homepage
 #     Then I should not see "Logged in as bar"
-#      When I follow "Login"
+#     When I follow "Login"
 #      And I fill in "username" with "bar"
 #      And I fill in "password" with "foo"
 #      And I press "Login"

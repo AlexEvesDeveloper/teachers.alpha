@@ -10,7 +10,7 @@ Feature: View the completed percentage of student's activities in my classes
       | Teacher     | teacher   | teacher@test.com  | password  | Teacher |
       | Student     | student   | student@test.com  | password  | Student |
     And "Student" has a "Basketball" activity
-    And all "Basketball" competencies for "Student" have a grade of "0"
+    And all "Basketball" competencies for "Student" have a grade of "4"
     And I am logged in as a "teacher"
 
   Scenario: Calculate the completed percentage of a student's activity

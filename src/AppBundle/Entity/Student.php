@@ -25,8 +25,7 @@ class Student extends User
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Activity", inversedBy="students")
-     * @ORM\JoinTable(name="students_activities")
+     * @ORM\OneToMany(targetEntity="Activity", mappedBy="student")
      */
     protected $activities;
 

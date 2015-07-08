@@ -5,6 +5,7 @@ namespace AppBundle\Features\Context;
 use AppBundle\Entity;
 use AppBundle\Entity\Teacher;
 use AppBundle\Entity\Student;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
@@ -65,11 +66,11 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     public function theDatabaseIsClean()
     {
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $em->createQuery('DELETE AppBundle:Competency')->execute();
+        $em->createQuery('DELETE AppBundle:Activity')->execute();
         $em->createQuery('DELETE AppBundle:User')->execute();
         $em->createQuery('DELETE AppBundle:Teacher')->execute();
         $em->createQuery('DELETE AppBundle:Student')->execute();
-        $em->createQuery('DELETE AppBundle:Activity')->execute();
-        $em->createQuery('DELETE AppBundle:Competency')->execute();
         $em->flush();
     }
 
@@ -117,7 +118,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         $student = $repo->findOneByName($studentName);
 
         // Create the Activity.
-        $activity = $this->buildActivity($activityName);
+        $activity = $this->buildActivity($activityName, $student);
 
         // Connect the two.
         $student->addActivity($activity);
@@ -132,17 +133,26 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         $doctrine = $this->kernel->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
-        $repo = $doctrine->getRepository('AppBundle:Student');
 
         // Get the Student.
-        $student = $repo->findOneByName($student);
+        $student = $doctrine->getRepository('AppBundle:Student')->findOneByName($student);
 
         // Get the given activity that belongs to them.
-        $activity = $student->findOneActivityByTitle()
+        $activity = $doctrine->getRepository('AppBundle:Activity')->findOneBy(array('student' => $student, 'title' => $activity));
 
         // Update the grades.
+        $competencies = $activity->getCompetencies();
+        foreach ($competencies as $competency) {
+            $competency->setCurrentGrade($grade);
+            $competency->setActivity($activity);
+            $em->persist($competency);
+        }
 
         // Persist.
+        $em->persist($activity);
+        $em->persist($student);
+        $em->flush();
+
     }
 
     /**
@@ -153,11 +163,17 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
         throw new PendingException();
     }
 
-    private function buildActivity($title)
+    /**
+     * @param $title
+     * @param Student $student
+     * @return Entity\Activity
+     */
+    private function buildActivity($title, Student $student)
     {
         $em = $this->kernel->getContainer()->get('doctrine')->getManager();
         $activity = new Entity\Activity();
         $activity->setTitle($title);
+        $activity->setStudent($student);
 
         // Build and attach the default Competencies
         $this->attachCompetencies($activity);
@@ -175,6 +191,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     {
         switch ($activity->getTitle()) {
             case 'Basketball':
+            case 'Football':
                 $competencyList = array('Dribbling', 'Passing', 'Rebounding', 'Shooting', 'Defending', 'Gameplay', 'Tactics/Challenges');
                 break;
             default:

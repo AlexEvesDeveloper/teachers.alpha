@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Activity
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ActivityRepository")
  */
 class Activity
 {
@@ -30,22 +30,19 @@ class Activity
     private $title;
 
     /**
-     * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Student", mappedBy="activities")
-     * @ORM\JoinTable(name="students_activities")
+     * @var Student
+     * @ORM\ManyToOne(targetEntity="Student", inversedBy="activities")
      */
-    protected $students;
+    protected $student;
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Competency")
-     * @ORM\JoinTable(name="activities_competencies")
+     * @ORM\OneToMany(targetEntity="Competency", mappedBy="activity")
      */
     protected $competencies;
 
     public function __construct()
     {
-        $this->students = new ArrayCollection();
         $this->competencies = new ArrayCollection();
     }
 
@@ -83,39 +80,6 @@ class Activity
     }
 
     /**
-     * Add students
-     *
-     * @param \AppBundle\Entity\Student $students
-     * @return Activity
-     */
-    public function addStudent(\AppBundle\Entity\Student $students)
-    {
-        $this->students[] = $students;
-
-        return $this;
-    }
-
-    /**
-     * Remove students
-     *
-     * @param \AppBundle\Entity\Student $students
-     */
-    public function removeStudent(\AppBundle\Entity\Student $students)
-    {
-        $this->students->removeElement($students);
-    }
-
-    /**
-     * Get students
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getStudents()
-    {
-        return $this->students;
-    }
-
-    /**
      * Add competencies
      *
      * @param Competency $competencies
@@ -146,5 +110,24 @@ class Activity
     public function getCompetencies()
     {
         return $this->competencies;
+    }
+
+    /**
+     * @return Student
+     */
+    public function getStudent()
+    {
+        return $this->student;
+    }
+
+    /**
+     * @param Student $student
+     * @return $this
+     */
+    public function setStudent(Student $student)
+    {
+        $this->student = $student;
+
+        return $this;
     }
 }

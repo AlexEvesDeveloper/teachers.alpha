@@ -5,12 +5,18 @@ namespace AppBundle\Features\Context;
 use AppBundle\Entity;
 use AppBundle\Entity\Teacher;
 use AppBundle\Entity\Student;
+use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Feature context.
@@ -19,6 +25,7 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
 {
     private $kernel;
     private $parameters;
+    private $authenticatedUser;
 
     /**
      * Initializes context with parameters from behat.yml.
@@ -158,9 +165,33 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
     /**
      * @Given /^I am logged in as a "([^"]*)"$/
      */
-    public function iAmLoggedInAsA($arg1)
+    public function iAmLoggedInAsA($username)
     {
-        throw new PendingException();
+        $driver = $this->getSession()->getDriver();
+        if ( ! $driver instanceof BrowserKitDriver) {
+            throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
+        }
+
+        $client = $driver->getClient();
+        $client->getCookieJar()->set(new Cookie(session_name(), true));
+
+        $session = $this->kernel->getContainer()->get('session');
+
+        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsername($username);
+        if ( ! $user instanceof Entity\User) {
+            throw new AccessDeniedException(sprintf('Could not find the user with username %s', $username));
+        }
+
+        $providerKey = $this->kernel->getContainer()->getParameter('fos_user.firewall_name');
+
+        $token = new UsernamePasswordToken($user, null, $providerKey, $user->getRoles());
+        $session->set('_security_'.$providerKey, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $client->getCookieJar()->set($cookie);
+
+        $this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
     }
 
     /**

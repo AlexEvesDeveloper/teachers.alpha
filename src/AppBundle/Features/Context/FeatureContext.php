@@ -2,10 +2,9 @@
 
 namespace AppBundle\Features\Context;
 
+use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Behat\Symfony2Extension\Context\KernelAwareInterface;
 use Behat\MinkExtension\Context\MinkContext;
-
 use Behat\Behat\Context\BehatContext,
     Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
@@ -14,7 +13,7 @@ use Behat\Gherkin\Node\PyStringNode,
 /**
  * Feature context.
  */
-class FeatureContext extends MinkContext implements KernelAwareInterface
+class FeatureContext implements KernelAwareContext
 {
     private $kernel;
     private $parameters;
@@ -57,17 +56,6 @@ class FeatureContext extends MinkContext implements KernelAwareInterface
             $userManager->updateUser($user);
         }
     }
-
-    /**
-     * @Given /^the database is clean$/
-     */
-    public function theDatabaseIsClean()
-    {
-        $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $em->createQuery('DELETE AppBundle:User')->execute();
-        $em->flush();
-    }
-
 
     /**
      * @Given /^I should be authenticated as [a|an] "([^"]*)"$/

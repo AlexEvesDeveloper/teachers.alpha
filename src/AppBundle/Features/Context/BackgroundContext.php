@@ -60,8 +60,9 @@ class BackgroundContext implements KernelAwareContext
 
         foreach ($table->getHash() as $hash) {
             $user = $userManager->createUser();
-            $user->setName($hash['name']);
-            $user->setUsername($hash['username']);
+            $user->setFirstName($hash['first_name']);
+            $user->setLastName($hash['last_name']);
+            $user->setUsername(uniqid());
             $user->setPlainPassword($hash['password']);
             $user->setEmail($hash['email']);
             $user->setEnabled(true);

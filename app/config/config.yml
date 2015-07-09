@@ -97,7 +97,7 @@ pugx_multi_user:
             name: fos_user_registration_form
             validation_groups:  [Registration, Default]
           template:
-            core/teacher/register.html.twig
+            user-management/teacher/register.html.twig
     student:
         entity:
           class: AppBundle\Entity\Student
@@ -107,4 +107,4 @@ pugx_multi_user:
             name: fos_user_registration_form
             validation_groups:  [Registration, Default]
           template:
-            core/student/register.html.twig
+            user-management/student/register.html.twig

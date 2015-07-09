@@ -9,7 +9,7 @@
     <body>
         <ul>
             {% if is_granted('ROLE_USER') %}
-                <li>Logged in as {{ app.user.username }}</li>
+                <li>Logged in as {{ app.user.firstName }} {{ app.user.lastName }}</li>
                 <li>
                     <a href="{{ path('fos_user_security_logout') }}">
                         {{ 'Logout'|trans({}, 'FOSUserBundle') }}

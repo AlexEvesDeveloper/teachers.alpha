@@ -11,7 +11,7 @@ use Behat\Gherkin\Node\TableNode;
 /**
  * Feature context.
  */
-class CommonContext implements KernelAwareContext
+class BackgroundContext implements KernelAwareContext
 {
     private $kernel;
     private $parameters;

@@ -1,13 +1,19 @@
 default:
     suites:
-        default:
-            paths:
-                - %paths.base%/src/AppBundle/Features
+        core_features:
+            paths: [%paths.base%/src/AppBundle/Features/core]
             contexts:
-                - AppBundle\Features\Context\FeatureContext:
-                      - []
-                - AppBundle\Features\Context\CleanDatabaseContext:
-                      - []
+                - AppBundle\Features\Context\CommonContext
+                - Behat\MinkExtension\Context\MinkContext
+        teacher_features:
+            paths: [%paths.base%/src/AppBundle/Features/teacher]
+            contexts:
+                - AppBundle\Features\Context\CommonContext
+                - Behat\MinkExtension\Context\MinkContext
+        student_features:
+            paths: [%paths.base%/src/AppBundle/Features/student]
+            contexts:
+                - AppBundle\Features\Context\CommonContext
                 - Behat\MinkExtension\Context\MinkContext
     extensions:
         Behat\MinkExtension:

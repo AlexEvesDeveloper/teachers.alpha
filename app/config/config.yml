@@ -1,7 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: services/user-management/services.yml }
+    - { resource: services/core/services.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -97,7 +97,7 @@ pugx_multi_user:
             name: fos_user_registration_form
             validation_groups:  [Registration, Default]
           template:
-            user-management/teacher/register.html.twig
+            core/teacher/register.html.twig
     student:
         entity:
           class: AppBundle\Entity\Student
@@ -107,4 +107,4 @@ pugx_multi_user:
             name: fos_user_registration_form
             validation_groups:  [Registration, Default]
           template:
-            user-management/student/register.html.twig
+            core/student/register.html.twig

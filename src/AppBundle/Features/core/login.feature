@@ -6,27 +6,27 @@ Feature: Log in to the application
   Background:
     Given the database is clean
     And there are the following users:
-      | name    | username  | email       | password  | type    |
-      | Bar     | bar       | bar@foo.com | foo       | Teacher |
+      | first_name    | last_name  | email          | password  | type    |
+      | Alex          | Eves       | alex@test.com  | password  | Teacher |
 
   Scenario: Log in as admin
     Given I am on homepage
      Then I should not see "Logged in as bar"
      When I follow "Login"
-      And I fill in "username" with "bar"
-      And I fill in "password" with "foo"
+      And I fill in "Email" with "alex@test.com"
+      And I fill in "Password" with "password"
       And I press "Login"
-     Then I should see "Logged in as bar"
+     Then I should see "Logged in as Alex Eves"
      Then I should not see "Login"
      When I follow "Logout"
-     Then I should not see "Logged in as bar"
+     Then I should not see "Logged in as Alex Eves"
      Then I should see "Login"
 
   Scenario: Unsuccessful login
     Given I am on homepage
      When I follow "Login"
-     When I fill in "username" with "wrong username"
-      And I fill in "password" with "wrong password"
+     When I fill in "Email" with "wrong username"
+      And I fill in "Password" with "wrong password"
       And I press "Login"
      Then I should see "Invalid credentials"
 

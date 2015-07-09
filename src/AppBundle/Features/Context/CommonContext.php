@@ -43,7 +43,11 @@ class CommonContext implements KernelAwareContext
     public function theDatabaseIsClean()
     {
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        $em->createQuery('DELETE AppBundle:Competency')->execute();
+        $em->createQuery('DELETE AppBundle:Activity')->execute();
         $em->createQuery('DELETE AppBundle:User')->execute();
+        $em->createQuery('DELETE AppBundle:Teacher')->execute();
+        $em->createQuery('DELETE AppBundle:Student')->execute();
         $em->flush();
     }
 
@@ -63,6 +67,38 @@ class CommonContext implements KernelAwareContext
             $user->setEnabled(true);
             $userManager->updateUser($user);
         }
+    }
+
+    /**
+     * @Given /^I am logged in as a "([^"]*)"$/
+     */
+    public function iAmLoggedInAsA($username)
+    {
+        $driver = $this->getSession()->getDriver();
+        if ( ! $driver instanceof BrowserKitDriver) {
+            throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
+        }
+
+        $client = $driver->getClient();
+        $client->getCookieJar()->set(new Cookie(session_name(), true));
+
+        $session = $this->kernel->getContainer()->get('session');
+
+        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsername($username);
+        if ( ! $user instanceof Entity\User) {
+            throw new AccessDeniedException(sprintf('Could not find the user with username %s', $username));
+        }
+
+        $providerKey = $this->kernel->getContainer()->getParameter('fos_user.firewall_name');
+
+        $token = new UsernamePasswordToken($user, null, $providerKey, $user->getRoles());
+        $session->set('_security_'.$providerKey, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $client->getCookieJar()->set($cookie);
+
+        $this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
     }
 
     /**
@@ -92,4 +128,110 @@ class CommonContext implements KernelAwareContext
                 return 'ROLE_USER';
         }
     }
+
+    /**
+     * @Given /^"([^"]*)" has a "([^"]*)" activity$/
+     * @param $studentName
+     * @param $activityName
+     */
+    public function hasAActivity($studentName, $activityName)
+    {
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $repo = $doctrine->getRepository('AppBundle:Student');
+
+        // Fetch the Student.
+        $student = $repo->findOneByName($studentName);
+
+        // Create the Activity.
+        $activity = $this->buildActivity($activityName, $student);
+
+        // Connect the two.
+        $student->addActivity($activity);
+        $em->persist($student);
+        $em->flush();
+    }
+
+    /**
+     * @Given /^all "([^"]*)" competencies for "([^"]*)" have a grade of "([^"]*)"$/
+     */
+    public function allCompetenciesForHaveAGradeOf($activity, $student, $grade)
+    {
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+
+        // Get the Student.
+        $student = $doctrine->getRepository('AppBundle:Student')->findOneByName($student);
+
+        // Get the given activity that belongs to them.
+        $activity = $doctrine->getRepository('AppBundle:Activity')->findOneBy(array('student' => $student, 'title' => $activity));
+
+        // Update the grades.
+        $competencies = $activity->getCompetencies();
+        foreach ($competencies as $competency) {
+            $competency->setCurrentGrade($grade);
+            $competency->setActivity($activity);
+            $em->persist($competency);
+        }
+
+        // Persist.
+        $em->persist($activity);
+        $em->persist($student);
+        $em->flush();
+
+    }
+
+
+
+    /**
+     * @param $title
+     * @param Student $student
+     * @return Entity\Activity
+     */
+    private function buildActivity($title, Student $student)
+    {
+        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
+        $activity = new Entity\Activity();
+        $activity->setTitle($title);
+        $activity->setStudent($student);
+
+        // Build and attach the default Competencies
+        $this->attachCompetencies($activity);
+
+        $em->persist($activity);
+        $em->flush();
+
+        return $activity;
+    }
+
+    /**
+     * @param Entity\Activity $activity
+     */
+    private function attachCompetencies(Entity\Activity $activity)
+    {
+        switch ($activity->getTitle()) {
+            case 'Basketball':
+            case 'Football':
+                $competencyList = array('Dribbling', 'Passing', 'Rebounding', 'Shooting', 'Defending', 'Gameplay', 'Tactics/Challenges');
+                break;
+            default:
+                $competencyList = array();
+        }
+
+        $em = $this->kernel->getContainer()->get('doctrine')->getManager();
+
+        if ( ! empty($competencyList)) {
+            foreach ($competencyList as $competencyTitle) {
+                $competency = new Entity\Competency();
+                $competency->setTitle($competencyTitle);
+                $em->persist($competency);
+
+                $activity->addCompetency($competency);
+                $em->persist($activity);
+            }
+        }
+
+        $em->flush();
+    }
 }
+

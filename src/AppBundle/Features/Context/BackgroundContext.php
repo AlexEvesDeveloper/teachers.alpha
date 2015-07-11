@@ -2,16 +2,23 @@
 
 namespace AppBundle\Features\Context;
 
+use AppBundle\Entity;
+use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Feature context.
  */
-class BackgroundContext implements KernelAwareContext
+class BackgroundContext extends RawMinkContext implements KernelAwareContext
 {
     private $kernel;
     private $parameters;
@@ -71,11 +78,12 @@ class BackgroundContext implements KernelAwareContext
     }
 
     /**
-     * @Given /^I am logged in as a "([^"]*)"$/
+     * @Given /^I am logged in as "([^"]*)"$/
      */
-    public function iAmLoggedInAsA($username)
+    public function iAmLoggedInAs($username)
     {
         $driver = $this->getSession()->getDriver();
+
         if ( ! $driver instanceof BrowserKitDriver) {
             throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
         }

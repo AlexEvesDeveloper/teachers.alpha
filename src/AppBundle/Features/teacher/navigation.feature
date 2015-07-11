@@ -12,6 +12,6 @@ Feature: Navigate the application as a teacher
       | Ann           | Bennett    | ann@test.com     | password  | Student |
     And I am logged in as "nathan@test.com"
 
-  Scenario: View the completed percentage of a student's activity
-    Given I go to "/students/2/basketball"
-    Then I should see "Percentage Complete: 0%"
+  Scenario: View a list of class
+    Given I go to "/classes"
+    Then I should see "Your Classes"

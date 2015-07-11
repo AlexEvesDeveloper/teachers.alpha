@@ -93,7 +93,7 @@ class BackgroundContext extends RawMinkContext implements KernelAwareContext
 
         $session = $this->kernel->getContainer()->get('session');
 
-        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsername($username);
+        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
         if ( ! $user instanceof Entity\User) {
             throw new AccessDeniedException(sprintf('Could not find the user with username %s', $username));
         }

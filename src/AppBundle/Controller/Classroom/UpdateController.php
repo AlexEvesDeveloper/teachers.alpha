@@ -8,21 +8,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
-class CreateController extends Controller
+class UpdateController extends Controller
 {
     /**
-     * @Route("/classrooms/create")
+     * @Route("/classrooms/update/{id}")
      * @Method({"GET", "POST"})
-     * @Template("Classroom\Create\index.html.twig")
+     * @Template("Classroom\Update\index.html.twig")
+     * @ParamConverter("classroom", class="AppBundle:Classroom")
      *
-     * @param Request $request
+     * @param Classroom $classroom
      * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, Classroom $classroom)
     {
-        $classroom = new Classroom();
         $form = $this->createForm(new ClassroomType(), $classroom);
         $form->handleRequest($request);
 
@@ -32,6 +33,10 @@ class CreateController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($classroom);
             $em->flush();
+
+            return $this->redirectToRoute('app_classroom_view_index', array(
+                'id' => $classroom->getId()
+            ), 301);
         }
 
         return array(

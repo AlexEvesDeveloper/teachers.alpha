@@ -51,8 +51,7 @@ class BackgroundContext extends RawMinkContext implements KernelAwareContext
     public function theDatabaseIsClean()
     {
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $em->createQuery('DELETE AppBundle:Competency')->execute();
-        $em->createQuery('DELETE AppBundle:Activity')->execute();
+        $em->createQuery('DELETE AppBundle:Classroom')->execute();
         $em->createQuery('DELETE AppBundle:User')->execute();
         $em->createQuery('DELETE AppBundle:Teacher')->execute();
         $em->createQuery('DELETE AppBundle:Student')->execute();

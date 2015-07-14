@@ -14,11 +14,16 @@ class ListController extends Controller
      * @Route("/classrooms")
      * @Method({"GET", "POST"})
      * @Template("Classroom\List\index.html.twig")
+     *
      * @param Request $request
      * @return array
      */
     public function indexAction(Request $request)
     {
-        return array();
+        $classrooms = $this->getDoctrine()->getRepository('AppBundle:Classroom')->findByTeacher($this->getUser());
+
+        return array(
+            'classrooms' => $classrooms
+        );
     }
 }

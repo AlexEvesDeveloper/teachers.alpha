@@ -20,6 +20,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class BackgroundContext extends RawMinkContext implements KernelAwareContext
 {
+    protected $authenticatedUser;
     private $kernel;
     private $parameters;
 
@@ -107,7 +108,7 @@ class BackgroundContext extends RawMinkContext implements KernelAwareContext
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
 
-        $this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
+        //$this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
     }
 
     /**

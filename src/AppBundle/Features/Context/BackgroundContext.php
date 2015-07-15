@@ -106,8 +106,6 @@ class BackgroundContext extends RawMinkContext implements KernelAwareContext
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
-
-        //$this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
     }
 
     /**
@@ -241,6 +239,14 @@ class BackgroundContext extends RawMinkContext implements KernelAwareContext
         }
 
         $em->flush();
+    }
+
+    /**
+     * @Given /^I am not logged in$/
+     */
+    public function iAmNotLoggedIn()
+    {
+        $this->kernel->getContainer()->get('security.token_storage')->setToken(null);
     }
 }
 

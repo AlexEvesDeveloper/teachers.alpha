@@ -9,6 +9,7 @@ default:
             paths: [%paths.base%/src/AppBundle/Features/teacher]
             contexts:
                 - AppBundle\Features\Context\BackgroundContext
+                - AppBundle\Features\Context\ClassroomContext
                 - Behat\MinkExtension\Context\MinkContext
         student_features:
             paths: [%paths.base%/src/AppBundle/Features/student]

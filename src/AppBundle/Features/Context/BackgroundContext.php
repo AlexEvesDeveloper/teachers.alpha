@@ -2,17 +2,25 @@
 
 namespace AppBundle\Features\Context;
 
+use AppBundle\Entity;
+use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Feature context.
  */
-class BackgroundContext implements KernelAwareContext
+class BackgroundContext extends RawMinkContext implements KernelAwareContext
 {
+    protected $authenticatedUser;
     private $kernel;
     private $parameters;
 
@@ -43,8 +51,7 @@ class BackgroundContext implements KernelAwareContext
     public function theDatabaseIsClean()
     {
         $em = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $em->createQuery('DELETE AppBundle:Competency')->execute();
-        $em->createQuery('DELETE AppBundle:Activity')->execute();
+        $em->createQuery('DELETE AppBundle:Classroom')->execute();
         $em->createQuery('DELETE AppBundle:User')->execute();
         $em->createQuery('DELETE AppBundle:Teacher')->execute();
         $em->createQuery('DELETE AppBundle:Student')->execute();
@@ -71,11 +78,12 @@ class BackgroundContext implements KernelAwareContext
     }
 
     /**
-     * @Given /^I am logged in as a "([^"]*)"$/
+     * @Given /^I am logged in as "([^"]*)"$/
      */
-    public function iAmLoggedInAsA($username)
+    public function iAmLoggedInAs($username)
     {
         $driver = $this->getSession()->getDriver();
+
         if ( ! $driver instanceof BrowserKitDriver) {
             throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
         }
@@ -85,7 +93,7 @@ class BackgroundContext implements KernelAwareContext
 
         $session = $this->kernel->getContainer()->get('session');
 
-        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsername($username);
+        $user = $this->kernel->getContainer()->get('fos_user.user_manager')->findUserByUsernameOrEmail($username);
         if ( ! $user instanceof Entity\User) {
             throw new AccessDeniedException(sprintf('Could not find the user with username %s', $username));
         }
@@ -99,7 +107,7 @@ class BackgroundContext implements KernelAwareContext
         $cookie = new Cookie($session->getName(), $session->getId());
         $client->getCookieJar()->set($cookie);
 
-        $this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
+        //$this->authenticatedUser = unserialize($session->get('_security_'.$providerKey))->getUser();
     }
 
     /**

@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>Your classrooms</h1>
+
+    <a href="{{ path('app_classroom_create_index') }}">Create new classroom</a>
+
+    {% for classroom in classrooms %}
+        <div>
+            <a href="{{ path('app_classroom_view_index', {'id' : classroom.id}) }}">{{ classroom.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock %}

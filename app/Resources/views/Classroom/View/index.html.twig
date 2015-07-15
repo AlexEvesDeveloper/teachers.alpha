@@ -1,0 +1,8 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>{{ classroom.name }}</h1>
+    <a href="{{ path('app_classroom_update_index', {'id' : classroom.id}) }}">Edit this classroom</a>
+    <a href="{{ path('app_classroom_delete_index', {'id' : classroom.id}) }}">Delete this classroom</a>
+
+{% endblock %}

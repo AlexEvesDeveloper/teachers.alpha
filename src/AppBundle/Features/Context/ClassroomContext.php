@@ -67,5 +67,21 @@ class ClassroomContext extends RawMinkContext implements KernelAwareContext
 
         return $em->getRepository('AppBundle:Teacher')->findOneByFirstName($firstName);
     }
+
+    /**
+     * @Given /^the classroom "([^"]*)" does not have a template$/
+     */
+    public function theClassroomDoesNotHaveATemplate($classroom)
+    {
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+
+        // Get the Classroom.
+        $classroom = $doctrine->getRepository('AppBundle:Classroom')->findOneByName($classroom);
+        $classroom->setLearningCardTemplate(null);
+
+        $em->persist($classroom);
+        $em->flush();
+    }
 }
 

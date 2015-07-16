@@ -4,24 +4,23 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use PUGX\MultiUserBundle\Validator\Constraints\UniqueEntity;
 
 /**
+ * LearningCardTemplate
+ *
+ * @ORM\Table()
  * @ORM\Entity
- * @ORM\Table(name="teacher")
- * @UniqueEntity(fields = "username", targetClass = "AppBundle\Entity\User", message="fos_user.username.already_used")
- * @UniqueEntity(fields = "email", targetClass = "AppBundle\Entity\User", message="fos_user.email.already_used")
  */
-class Teacher extends User
+class LearningCardTemplate
 {
-    const ROLE_DEFAULT = 'ROLE_TEACHER';
-
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @var ArrayCollection
@@ -35,7 +34,6 @@ class Teacher extends User
      */
     public function __construct()
     {
-        parent::__construct();
         $this->classrooms = new ArrayCollection();
     }
 
@@ -47,19 +45,6 @@ class Teacher extends User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set firstName
-     *
-     * @param string $firstName
-     * @return Teacher
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-
-        return $this;
     }
 
     /**
@@ -88,7 +73,7 @@ class Teacher extends User
     /**
      * Get classrooms
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getClassrooms()
     {

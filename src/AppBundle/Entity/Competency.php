@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,12 +32,35 @@ class Competency
     /**
      * @var integer
      *
-     * @ORM\Column(name="currentGrade", type="smallint")
+     * @ORM\Column(type="smallint")
      */
+    private $minRange;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $maxRange;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint")
+     */
+    private $currentGrade;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="LearningCardTemplate", mappedBy="competencies")
+     */
+    private $learningCardTemplates;
 
     public function __construct()
     {
         $this->currentGrade = 0;
+        $this->learningCardTemplates = new ArrayCollection();
     }
 
     /**
@@ -93,5 +117,76 @@ class Competency
     public function getCurrentGrade()
     {
         return $this->currentGrade;
+    }
+
+    /**
+     * Add learningCardTemplates
+     *
+     * @param LearningCardTemplate $learningCardTemplates
+     * @return Competency
+     */
+    public function addLearningCardTemplate(LearningCardTemplate $learningCardTemplates)
+    {
+        $this->learningCardTemplates[] = $learningCardTemplates;
+
+        return $this;
+    }
+
+    /**
+     * Remove learningCardTemplates
+     *
+     * @param LearningCardTemplate $learningCardTemplates
+     */
+    public function removeLearningCardTemplate(LearningCardTemplate $learningCardTemplates)
+    {
+        $this->learningCardTemplates->removeElement($learningCardTemplates);
+    }
+
+    /**
+     * Get learningCardTemplates
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLearningCardTemplates()
+    {
+        return $this->learningCardTemplates;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinRange()
+    {
+        return $this->minRange;
+    }
+
+    /**
+     * @param int $minRange
+     * @return $this
+     */
+    public function setMinRange($minRange)
+    {
+        $this->minRange = $minRange;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxRange()
+    {
+        return $this->maxRange;
+    }
+
+    /**
+     * @param int $maxRange
+     * @return $this
+     */
+    public function setMaxRange($maxRange)
+    {
+        $this->maxRange = $maxRange;
+
+        return $this;
     }
 }

@@ -2,4 +2,13 @@
 
 {% block body %}
     <h1>{{ classroom.name }} Learning Card</h1>
+
+    {{ form_start(form) }}
+        <h3>Competencies</h3>
+        <ul class="competencies" data-prototype="{{ form_widget(form.competencies.vars.prototype) | e }}">
+            {% for competency in form.competencies %}
+                <li>{{ form_row(competency.title) }}</li>
+            {% endfor %}
+        </ul>
+    {{ form_end(form) }}
 {% endblock %}

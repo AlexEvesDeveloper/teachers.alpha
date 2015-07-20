@@ -30,11 +30,19 @@ class LearningCardTemplate
     private $classrooms;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Competency", inversedBy="learningCardTemplates")
+     */
+    private $competencies;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->classrooms = new ArrayCollection();
+        $this->competencies = new ArrayCollection();;
     }
 
     /**
@@ -78,5 +86,38 @@ class LearningCardTemplate
     public function getClassrooms()
     {
         return $this->classrooms;
+    }
+
+    /**
+     * Add competencies
+     *
+     * @param Competency $competencies
+     * @return LearningCardTemplate
+     */
+    public function addCompetency(Competency $competencies)
+    {
+        $this->competencies[] = $competencies;
+
+        return $this;
+    }
+
+    /**
+     * Remove competencies
+     *
+     * @param Competency $competencies
+     */
+    public function removeCompetency(Competency $competencies)
+    {
+        $this->competencies->removeElement($competencies);
+    }
+
+    /**
+     * Get competencies
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCompetencies()
+    {
+        return $this->competencies;
     }
 }

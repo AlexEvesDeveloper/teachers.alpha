@@ -25,11 +25,14 @@ class ViewController extends Controller
      */
     public function indexAction(Request $request, Classroom $classroom)
     {
-        $form = $this->createForm(new LearningCardTemplateType(), $classroom->getLearningCardTemplate());
+        $template = $classroom->getLearningCardTemplate();
+        $form = $this->createForm(new LearningCardTemplateType(), $template);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($template);
+            $em->flush();
         }
 
         return array(

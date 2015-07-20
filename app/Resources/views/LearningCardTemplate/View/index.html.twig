@@ -11,55 +11,70 @@
             {% endfor %}
         </ul>
     {{ form_end(form) }}
+{% endblock %}
 
-    {% block javascripts %}
-        {{ parent() }}
+{% block javascripts %}
+    {{ parent() }}
 
-        <script>
-            var $collectionHolder;
+    <script>
+        // setup an "add a competency" link
+        var $addCompetencyLink = $('<a href="#" class="add_competency_link">Add a competency</a>');
+        var $newLinkLi = $('<li></li>').append($addCompetencyLink);
 
-            // setup an "add a tag" link
-            var $addCompetencyLink = $('<a href="#" class="add_competency_link">Add a competency</a>');
-            var $newLinkLi = $('<li></li>').append($addCompetencyLink);
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of competencies
+            var $collectionHolder = $('ul.competencies');
 
-            jQuery(document).ready(function() {
-                // Get the ul that holds the collection of tags
-                $collectionHolder = $('ul.competencies');
+            // add the "add a competency" anchor and li to the competencies ul
+            $collectionHolder.append($newLinkLi);
 
-                // add the "add a tag" anchor and li to the tags ul
-                $collectionHolder.append($newLinkLi);
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            console.dir($collectionHolder);
 
-                // count the current form inputs we have (e.g. 2), use that as the new
-                // index when inserting a new item (e.g. 2)
-                $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            $addCompetencyLink.on('click', function(e) {
+                console.dir('in');
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
 
-                $addCompetencyLink.on('click', function(e) {
-                    // prevent the link from creating a "#" on the URL
-                    e.preventDefault();
-
-                    // add a new tag form (see next code block)
-                    $addCompetencyForm($collectionHolder, $newLinkLi);
-                });
+                // add a new competency form (see code block below)
+                addCompetencyForm($collectionHolder, $newLinkLi);
             });
 
-            function addCompetencyForm($collectionHolder, $newLinkLi) {
-                // Get the data-prototype explained earlier
-                var prototype = $collectionHolder.data('prototype');
 
-                // get the new index
-                var index = $collectionHolder.data('index');
+        });
 
-                // Replace '__name__' in the prototype's HTML to
-                // instead be a number based on how many items we have
-                var newForm = prototype.replace(/__name__/g, index);
+        function addCompetencyForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
 
-                // increase the index with one for the next item
-                $collectionHolder.data('index', index + 1);
+            // get the new index
+            var index = $collectionHolder.data('index');
 
-                // Display the form in the page in an li, before the "Add a tag" link li
-                var $newFormLi = $('<li></li>').append(newForm);
-                $newLinkLi.before($newFormLi);
-            }
-        </script>
-    {% endblock %}
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a competency" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+
+            // also add a remove button, just for this example
+            $newFormLi.append('<a href="#" class="remove-competency">x</a>');
+
+            $newLinkLi.before($newFormLi);
+
+            // handle the removal, just for this example
+            $('.remove-competency').click(function(e) {
+                e.preventDefault();
+
+                $(this).parent().remove();
+
+                return false;
+            });
+        }
+    </script>
 {% endblock %}

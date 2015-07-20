@@ -83,5 +83,26 @@ class ClassroomContext extends RawMinkContext implements KernelAwareContext
         $em->persist($classroom);
         $em->flush();
     }
+
+    /**
+     * @Given /^the classroom "([^"]*)" has an existing template$/
+     */
+    public function theClassroomHasAnExistingTemplate($classroom)
+    {
+        $doctrine = $this->kernel->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+
+        // Get the Classroom.
+        $classroom = $doctrine->getRepository('AppBundle:Classroom')->findOneByName($classroom);
+
+        // Add a LearningCardTemplate
+        $template = new Entity\LearningCardTemplate();
+        $template->addClassroom($classroom);
+        $classroom->setLearningCardTemplate($template);
+
+        $em->persist($template);
+        $em->persist($classroom);
+        $em->flush();
+    }
 }
 

@@ -18,6 +18,7 @@ class CompetencyType extends AbstractType
             ->add('title')
             ->add('minRange')
             ->add('maxRange')
+            ->add('save', 'submit')
         ;
     }
     

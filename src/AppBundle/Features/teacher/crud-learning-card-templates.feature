@@ -9,22 +9,19 @@ Feature: create, read, update and delete learning card templates for a classroom
       | first_name    | last_name  | email            | password  | type    |
       | Nathan        | Bennett    | nathan@test.com  | password  | Teacher |
     And I am logged in as "nathan@test.com"
+    And there are the following classrooms:
+      | name                    | teacher     |
+      | Basketball Year 7 boys  | Nathan      |
 
     Scenario: View a classroom that does not have a learning card template
-      Given there are the following classrooms:
-        | name                    | teacher     |
-        | Basketball Year 7 boys  | Nathan      |
-      And the classroom "Basketball Year 7 boys" does not have a template
+      Given the classroom "Basketball Year 7 boys" does not have a template
       When I go to "/classrooms"
       And I follow "Basketball Year 7 boys"
-      Then I should see "You have not created a learning template for this classroom, would you like to create one now?"
+      Then I should see "Create learning card"
       And I should not see "View learning card"
 
     Scenario: Create a learning card template for a classroom
-      Given there are the following classrooms:
-        | name                    | teacher     |
-        | Basketball Year 7 boys  | Nathan      |
-      And the classroom "Basketball Year 7 boys" does not have a template
+      Given the classroom "Basketball Year 7 boys" does not have a template
       When I go to "/classrooms"
       And I follow "Basketball Year 7 boys"
       When I follow "Create learning card"
@@ -37,3 +34,10 @@ Feature: create, read, update and delete learning card templates for a classroom
 #      Then I should see "Throwing"
 #      When I press "Back to classroom"
 #      Then I should see "View learning card"
+
+      Scenario: View the learning card template for a classroom
+        Given the classroom "Basketball Year 7 boys" has an existing template
+        When I go to "/classrooms"
+        And I follow "Basketball Year 7 boys"
+        Then I should see "View learning card"
+        And I should not see "Create learning card"

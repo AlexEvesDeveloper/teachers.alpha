@@ -18,3 +18,22 @@ Feature: create, read, update and delete learning card templates for a classroom
       When I go to "/classrooms"
       And I follow "Basketball Year 7 boys"
       Then I should see "You have not created a learning template for this classroom, would you like to create one now?"
+      And I should not see "View learning card"
+
+    Scenario: Create a learning card template for a classroom
+      Given there are the following classrooms:
+        | name                    | teacher     |
+        | Basketball Year 7 boys  | Nathan      |
+      And the classroom "Basketball Year 7 boys" does not have a template
+      When I go to "/classrooms"
+      And I follow "Basketball Year 7 boys"
+      When I follow "Create learning card"
+      Then I should see "Basketball Year 7 boys Learning Card"
+#      When I press "Add Competency"
+#      And I fill in the following:
+#        | title                   | minimum | maximum |
+#        | Throwing                | 0       | 10      |
+#      And I press "Add competency"
+#      Then I should see "Throwing"
+#      When I press "Back to classroom"
+#      Then I should see "View learning card"

@@ -33,13 +33,6 @@ class Competency
      *
      * @ORM\Column(name="currentGrade", type="smallint")
      */
-    private $currentGrade;
-
-    /**
-     * @var Activity
-     * @ORM\ManyToOne(targetEntity="Activity", inversedBy="competencies")
-     */
-    protected $activity;
 
     public function __construct()
     {
@@ -100,24 +93,5 @@ class Competency
     public function getCurrentGrade()
     {
         return $this->currentGrade;
-    }
-
-    /**
-     * @return Activity
-     */
-    public function getActivity()
-    {
-        return $this->activity;
-    }
-
-    /**
-     * @param Activity $activity
-     * @return $this
-     */
-    public function setActivity(Activity $activity)
-    {
-        $this->activity = $activity;
-
-        return $this;
     }
 }

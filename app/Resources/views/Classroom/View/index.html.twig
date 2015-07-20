@@ -5,6 +5,7 @@
 
     {% if classroom.learningCardTemplate is null %}
         <p>You have not created a learning template for this classroom, would you like to create one now?</p>
+        <a href="{{ path('app_learningcardtemplate_create_index', {'id' : classroom.id}) }}">Create learning card</a>
     {% endif %}
 
     <a href="{{ path('app_classroom_update_index', {'id' : classroom.id}) }}">Edit this classroom</a>

@@ -13,17 +13,12 @@ Feature: create, read, update and delete learning card templates for a classroom
       | name                    | teacher     |
       | Basketball Year 7 boys  | Nathan      |
 
-    Scenario: View a classroom that does not have a learning card template
+    Scenario: Create a learning card template for a classroom
       Given the classroom "Basketball Year 7 boys" does not have a template
       When I go to "/classrooms"
       And I follow "Basketball Year 7 boys"
       Then I should see "Create learning card"
       And I should not see "View learning card"
-
-    Scenario: Create a learning card template for a classroom
-      Given the classroom "Basketball Year 7 boys" does not have a template
-      When I go to "/classrooms"
-      And I follow "Basketball Year 7 boys"
       When I follow "Create learning card"
       Then I should see "Basketball Year 7 boys Learning Card"
 #      When I press "Add Competency"
@@ -35,9 +30,14 @@ Feature: create, read, update and delete learning card templates for a classroom
 #      When I press "Back to classroom"
 #      Then I should see "View learning card"
 
-      Scenario: View the learning card template for a classroom
-        Given the classroom "Basketball Year 7 boys" has an existing template
-        When I go to "/classrooms"
-        And I follow "Basketball Year 7 boys"
-        Then I should see "View learning card"
-        And I should not see "Create learning card"
+    Scenario: View the learning card template for a classroom
+      Given the classroom "Basketball Year 7 boys" has an existing template
+      When I go to "/classrooms"
+      And I follow "Basketball Year 7 boys"
+      Then I should see "View learning card"
+      And I should not see "Create learning card"
+      When I follow "View learning card"
+      Then I should see "Basketball Year 7 boys Learning Card"
+
+    Scenario: Update the learning card template for a classroom
+      #Given I am viewing a learning card template

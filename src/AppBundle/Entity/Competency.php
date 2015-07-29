@@ -43,24 +43,8 @@ class Competency
      */
     private $maxRange;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="smallint")
-     */
-    private $currentGrade;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="LearningCardTemplate", mappedBy="competencies")
-     */
-    private $learningCardTemplates;
-
     public function __construct()
     {
-        $this->currentGrade = 0;
-        $this->learningCardTemplates = new ArrayCollection();
     }
 
     /**
@@ -94,62 +78,6 @@ class Competency
     public function getTitle()
     {
         return $this->title;
-    }
-
-    /**
-     * Set currentGrade
-     *
-     * @param integer $currentGrade
-     * @return Competency
-     */
-    public function setCurrentGrade($currentGrade)
-    {
-        $this->currentGrade = $currentGrade;
-
-        return $this;
-    }
-
-    /**
-     * Get currentGrade
-     *
-     * @return integer 
-     */
-    public function getCurrentGrade()
-    {
-        return $this->currentGrade;
-    }
-
-    /**
-     * Add learningCardTemplates
-     *
-     * @param LearningCardTemplate $learningCardTemplates
-     * @return Competency
-     */
-    public function addLearningCardTemplate(LearningCardTemplate $learningCardTemplates)
-    {
-        $this->learningCardTemplates[] = $learningCardTemplates;
-
-        return $this;
-    }
-
-    /**
-     * Remove learningCardTemplates
-     *
-     * @param LearningCardTemplate $learningCardTemplates
-     */
-    public function removeLearningCardTemplate(LearningCardTemplate $learningCardTemplates)
-    {
-        $this->learningCardTemplates->removeElement($learningCardTemplates);
-    }
-
-    /**
-     * Get learningCardTemplates
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getLearningCardTemplates()
-    {
-        return $this->learningCardTemplates;
     }
 
     /**

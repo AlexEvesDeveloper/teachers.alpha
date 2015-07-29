@@ -21,14 +21,6 @@ Feature: create, read, update and delete learning card templates for a classroom
       And I should not see "View learning card"
       When I follow "Create learning card"
       Then I should see "Basketball Year 7 boys Learning Card"
-#      When I press "Add Competency"
-#      And I fill in the following:
-#        | title                   | minimum | maximum |
-#        | Throwing                | 0       | 10      |
-#      And I press "Add competency"
-#      Then I should see "Throwing"
-#      When I press "Back to classroom"
-#      Then I should see "View learning card"
 
     Scenario: View the learning card template for a classroom
       Given the classroom "Basketball Year 7 boys" has an existing template
@@ -38,6 +30,3 @@ Feature: create, read, update and delete learning card templates for a classroom
       And I should not see "Create learning card"
       When I follow "View learning card"
       Then I should see "Basketball Year 7 boys Learning Card"
-
-    Scenario: Update the learning card template for a classroom
-      #Given I am viewing a learning card template

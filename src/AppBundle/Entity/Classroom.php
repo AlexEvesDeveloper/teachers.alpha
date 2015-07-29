@@ -38,7 +38,7 @@ class Classroom
     /**
      * @var LearningCardTemplate
      *
-     * @ORM\ManyTOOne(targetEntity="LearningCardTemplate", inversedBy="classrooms")
+     * @ORM\ManyToOne(targetEntity="LearningCardTemplate", inversedBy="classrooms", cascade={"persist"})
      */
     private $learningCardTemplate;
 

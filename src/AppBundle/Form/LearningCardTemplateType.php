@@ -17,8 +17,10 @@ class LearningCardTemplateType extends AbstractType
         $builder
             ->add('competencies', 'collection', array(
                 'type' => new CompetencyType(),
-                'allow_add' => true
+                'allow_add' => true,
+                'by_reference' => false
             ))
+            ->add('save', 'submit')
         ;
     }
     
@@ -28,7 +30,8 @@ class LearningCardTemplateType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\LearningCardTemplate'
+            'data_class' => 'AppBundle\Entity\LearningCardTemplate',
+            'csrf_protection' => false,
         ));
     }
 

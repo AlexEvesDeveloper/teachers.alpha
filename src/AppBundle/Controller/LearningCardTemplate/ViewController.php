@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\LearningCardTemplate;
 
 use AppBundle\Entity\Classroom;
+use AppBundle\Entity\LearningCardTemplate;
 use AppBundle\Form\LearningCardTemplateType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewController extends Controller
 {
     /**
-     * @Route("/classrooms/{id}/learning-card-template/view")
+     * @Route("/classrooms/view/{id}/learning-card-template")
      * @Method({"GET", "POST"})
      * @Template("LearningCardTemplate\View\index.html.twig")
      * @ParamConverter("classroom", class="AppBundle:Classroom")
@@ -31,13 +32,15 @@ class ViewController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $template = $form->getData();
+
             $em->persist($template);
             $em->flush();
         }
 
         return array(
             'classroom' => $classroom,
-            'template' => $classroom->getLearningCardTemplate(),
             'form' => $form->createView()
         );
     }

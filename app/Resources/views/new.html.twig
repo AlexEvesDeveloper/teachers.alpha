@@ -1,52 +1,51 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <h1>{{ classroom.name }} Learning Card</h1>
 
     {{ form_start(form) }}
-        <h3>Competencies</h3>
-        <ul class="competencies" data-prototype="{{ form_widget(form.competencies.vars.prototype) | e }}">
-            {% for competency in form.competencies %}
-                <li>{{ form_row(competency) }}</li>
-            {% endfor %}
-        </ul>
-    {% do form.competencies.setRendered %}
+
+    <h3>Tags</h3>
+    <ul class="tags" data-prototype="{{ form_widget(form.tags.vars.prototype)|e }}">
+        {# iterate over each existing tag and render its only field: name #}
+        {% for tag in form.tags %}
+            <li>{{ form_row(tag.name) }}</li>
+        {% endfor %}
+    </ul>
     {{ form_end(form) }}
+
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script>
-        // setup an "add a competency" link
-        var $addCompetencyLink = $('<a href="#" class="add_competency_link">Add a competency</a>');
-        var $newLinkLi = $('<li></li>').append($addCompetencyLink);
+        // setup an "add a tag" link
+        var $addTagLink = $('<a href="#" class="add_tag_link">Add a tag</a>');
+        var $newLinkLi = $('<li></li>').append($addTagLink);
 
         jQuery(document).ready(function() {
-            // Get the ul that holds the collection of competencies
-            var $collectionHolder = $('ul.competencies');
+            // Get the ul that holds the collection of tags
+            var $collectionHolder = $('ul.tags');
 
-            // add the "add a competency" anchor and li to the competencies ul
+            // add the "add a tag" anchor and li to the tags ul
             $collectionHolder.append($newLinkLi);
 
             // count the current form inputs we have (e.g. 2), use that as the new
             // index when inserting a new item (e.g. 2)
             $collectionHolder.data('index', $collectionHolder.find(':input').length);
-            console.dir($collectionHolder);
 
-            $addCompetencyLink.on('click', function(e) {
-                console.dir('in');
+            $addTagLink.on('click', function(e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
 
-                // add a new competency form (see code block below)
-                addCompetencyForm($collectionHolder, $newLinkLi);
+                // add a new tag form (see code block below)
+                addTagForm($collectionHolder, $newLinkLi);
             });
 
 
         });
 
-        function addCompetencyForm($collectionHolder, $newLinkLi) {
+        function addTagForm($collectionHolder, $newLinkLi) {
             // Get the data-prototype explained earlier
             var prototype = $collectionHolder.data('prototype');
 
@@ -60,16 +59,16 @@
             // increase the index with one for the next item
             $collectionHolder.data('index', index + 1);
 
-            // Display the form in the page in an li, before the "Add a competency" link li
+            // Display the form in the page in an li, before the "Add a tag" link li
             var $newFormLi = $('<li></li>').append(newForm);
 
             // also add a remove button, just for this example
-            $newFormLi.append('<a href="#" class="remove-competency">x</a>');
+            $newFormLi.append('<a href="#" class="remove-tag">x</a>');
 
             $newLinkLi.before($newFormLi);
 
             // handle the removal, just for this example
-            $('.remove-competency').click(function(e) {
+            $('.remove-tag').click(function(e) {
                 e.preventDefault();
 
                 $(this).parent().remove();

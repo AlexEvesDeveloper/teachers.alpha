@@ -1,7 +1,7 @@
-Feature: Register a new student
-  In order to access the application as a student
+Feature: Register a new user
+  In order to access the application as a registered user
   As a visitor
-  I want to register a new student account
+  I want to register a new user account
 
   Background:
     Given the database is clean

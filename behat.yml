@@ -18,8 +18,21 @@ default:
                 - Behat\MinkExtension\Context\MinkContext
     extensions:
         Behat\MinkExtension:
-            base_url: 'http://localhost:8080/app_dev.php'
+            base_url: http://localhost:8080
+#           goutte: ~
+#            javascript_session: selenium2
+#            default_session: selenium2
+#            browser_name: 'firefox'
+#            selenium2:
+#              capabilities: { "browser": "firefox", "version": "14"}
+#              wd_host: http://127.0.0.1:4444/wd/hub
+#            base_url: 'http://localhost:8080/app_dev.php'
+#            browser_name: firefox
+#            javascript_session: selenium_session
             sessions:
                 default:
                     symfony2: ~
+#                selenium_session:
+#                    selenium2:
+#                        wd_host: http://127.0.0.1:4444/wd/hub/session/session
         Behat\Symfony2Extension: ~

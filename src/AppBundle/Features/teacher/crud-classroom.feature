@@ -19,7 +19,6 @@ Feature: Create, read, update and delete my classrooms
     And I fill in the following:
       | Name | Football Year 7 boys |
     And I press "Create classroom"
-    When I go to "/classrooms"
     Then I should see "Football Year 7 boys"
 
   Scenario: View a list of classrooms
@@ -39,26 +38,9 @@ Feature: Create, read, update and delete my classrooms
       | name                    | teacher     |
       | Basketball Year 7 boys  | Nathan      |
       | Football Year 7 boys    | Nathan      |
-#    And the classrooms have the following students:
-#      | classroom               | student_first_name  | student_second_name |
-#      | Basketball Year 7 boys  | Alex                | Eves                |
-#      | Netball Year 7 girls    | Ann                 | Bennett             |
     When I go to "/classrooms"
     And I follow "Basketball Year 7 boys"
     Then I should see "Basketball Year 7 boys"
-    And I should not see "Football Year 7 boys"
-
-  Scenario: Update the name of a classroom
-    Given there are the following classrooms:
-      | name                    | teacher     |
-      | Football Year 7 boys    | Nathan      |
-    When I go to "/classrooms"
-    And I follow "Football Year 7 boys"
-    When I follow "Edit this classroom"
-    And I fill in the following:
-      | Name | Football Year 8 boys |
-    And I press "Confirm update"
-    Then I should see "Football Year 8 boys"
     And I should not see "Football Year 7 boys"
 
   Scenario: Delete a classroom

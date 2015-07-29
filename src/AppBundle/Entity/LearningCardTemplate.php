@@ -25,14 +25,14 @@ class LearningCardTemplate
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Classroom", mappedBy="teacher")
+     * @ORM\OneToMany(targetEntity="Classroom", mappedBy="learningCardTemplate")
      */
     private $classrooms;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Competency", inversedBy="learningCardTemplates")
+     * @ORM\ManyToMany(targetEntity="Competency", cascade={"persist"})
      */
     private $competencies;
 
@@ -96,7 +96,7 @@ class LearningCardTemplate
      */
     public function addCompetency(Competency $competencies)
     {
-        $this->competencies[] = $competencies;
+        $this->competencies->add($competencies);
 
         return $this;
     }

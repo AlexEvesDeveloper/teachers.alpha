@@ -18,7 +18,7 @@ class CompetencyType extends AbstractType
             ->add('title')
             ->add('minRange')
             ->add('maxRange')
-            ->add('save', 'submit')
+            //->add('save', 'submit')
         ;
     }
     
@@ -28,7 +28,8 @@ class CompetencyType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Competency'
+            'data_class' => 'AppBundle\Entity\Competency',
+            'csrf_protection' => false,
         ));
     }
 

@@ -26,7 +26,8 @@ class ClassroomType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Classroom'
+            'data_class' => 'AppBundle\Entity\Classroom',
+            'csrf_protection' => false,
         ));
     }
 
@@ -35,6 +36,6 @@ class ClassroomType extends AbstractType
      */
     public function getName()
     {
-        return 'appbundle_classroom';
+        return '';
     }
 }

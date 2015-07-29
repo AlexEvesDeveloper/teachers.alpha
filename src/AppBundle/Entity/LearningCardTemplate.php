@@ -6,12 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Activity
+ * LearningCardTemplate
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ActivityRepository")
+ * @ORM\Entity
  */
-class Activity
+class LearningCardTemplate
 {
     /**
      * @var integer
@@ -23,27 +23,26 @@ class Activity
     private $id;
 
     /**
-     * @var string
+     * @var ArrayCollection
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\OneToMany(targetEntity="Classroom", mappedBy="learningCardTemplate")
      */
-    private $title;
-
-    /**
-     * @var Student
-     * @ORM\ManyToOne(targetEntity="Student", inversedBy="activities")
-     */
-    protected $student;
+    private $classrooms;
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Competency", mappedBy="activity")
+     *
+     * @ORM\ManyToMany(targetEntity="Competency", cascade={"persist"})
      */
-    protected $competencies;
+    private $competencies;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->competencies = new ArrayCollection();
+        $this->classrooms = new ArrayCollection();
+        $this->competencies = new ArrayCollection();;
     }
 
     /**
@@ -57,37 +56,47 @@ class Activity
     }
 
     /**
-     * Set title
+     * Add classrooms
      *
-     * @param string $title
-     * @return Activity
+     * @param Classroom $classrooms
+     * @return Teacher
      */
-    public function setTitle($title)
+    public function addClassroom(Classroom $classrooms)
     {
-        $this->title = $title;
+        $this->classrooms[] = $classrooms;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Remove classrooms
      *
-     * @return string 
+     * @param Classroom $classrooms
      */
-    public function getTitle()
+    public function removeClassroom(Classroom $classrooms)
     {
-        return $this->title;
+        $this->classrooms->removeElement($classrooms);
+    }
+
+    /**
+     * Get classrooms
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClassrooms()
+    {
+        return $this->classrooms;
     }
 
     /**
      * Add competencies
      *
      * @param Competency $competencies
-     * @return Activity
+     * @return LearningCardTemplate
      */
     public function addCompetency(Competency $competencies)
     {
-        $this->competencies[] = $competencies;
+        $this->competencies->add($competencies);
 
         return $this;
     }
@@ -110,24 +119,5 @@ class Activity
     public function getCompetencies()
     {
         return $this->competencies;
-    }
-
-    /**
-     * @return Student
-     */
-    public function getStudent()
-    {
-        return $this->student;
-    }
-
-    /**
-     * @param Student $student
-     * @return $this
-     */
-    public function setStudent(Student $student)
-    {
-        $this->student = $student;
-
-        return $this;
     }
 }

@@ -1,0 +1,81 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h1>{{ classroom.name }} Learning Card</h1>
+
+    {{ form_start(form) }}
+        <h3>Competencies</h3>
+        <ul class="competencies" data-prototype="{{ form_widget(form.competencies.vars.prototype) | e }}">
+            {% for competency in form.competencies %}
+                <li>{{ form_row(competency) }}</li>
+            {% endfor %}
+        </ul>
+    {% do form.competencies.setRendered %}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        // setup an "add a competency" link
+        var $addCompetencyLink = $('<a href="#" class="add_competency_link">Add a competency</a>');
+        var $newLinkLi = $('<li></li>').append($addCompetencyLink);
+
+        jQuery(document).ready(function() {
+            // Get the ul that holds the collection of competencies
+            var $collectionHolder = $('ul.competencies');
+
+            // add the "add a competency" anchor and li to the competencies ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            console.dir($collectionHolder);
+
+            $addCompetencyLink.on('click', function(e) {
+                console.dir('in');
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new competency form (see code block below)
+                addCompetencyForm($collectionHolder, $newLinkLi);
+            });
+
+
+        });
+
+        function addCompetencyForm($collectionHolder, $newLinkLi) {
+            // Get the data-prototype explained earlier
+            var prototype = $collectionHolder.data('prototype');
+
+            // get the new index
+            var index = $collectionHolder.data('index');
+
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            var newForm = prototype.replace(/__name__/g, index);
+
+            // increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a competency" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+
+            // also add a remove button, just for this example
+            $newFormLi.append('<a href="#" class="remove-competency">x</a>');
+
+            $newLinkLi.before($newFormLi);
+
+            // handle the removal, just for this example
+            $('.remove-competency').click(function(e) {
+                e.preventDefault();
+
+                $(this).parent().remove();
+
+                return false;
+            });
+        }
+    </script>
+{% endblock %}

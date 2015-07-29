@@ -23,12 +23,6 @@ class Student extends User
      */
     protected $id;
 
-    /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Activity", mappedBy="student")
-     */
-    protected $activities;
-
     public function __construct()
     {
         parent::__construct();
@@ -44,38 +38,5 @@ class Student extends User
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Add activities
-     *
-     * @param Activity $activities
-     * @return Student
-     */
-    public function addActivity(Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param Activity $activities
-     */
-    public function removeActivity(Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getActivities()
-    {
-        return $this->activities;
     }
 }

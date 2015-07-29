@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Classroom;
 
 use AppBundle\Entity\Classroom;
+use AppBundle\Entity\LearningCardTemplate;
 use AppBundle\Form\ClassroomType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -29,9 +30,14 @@ class CreateController extends Controller
         if ($form->isValid()) {
             $classroom->setTeacher($this->getUser());
 
+            $template = new LearningCardTemplate();
+            $classroom->setLearningCardTemplate($template);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($classroom);
             $em->flush();
+
+            return $this->redirectToRoute('app_classroom_list_index');
         }
 
         return array(

@@ -65,10 +65,10 @@ class Teacher extends User
     /**
      * Add classrooms
      *
-     * @param \AppBundle\Entity\Classroom $classrooms
+     * @param Classroom $classrooms
      * @return Teacher
      */
-    public function addClassroom(\AppBundle\Entity\Classroom $classrooms)
+    public function addClassroom(Classroom $classrooms)
     {
         $this->classrooms[] = $classrooms;
 
@@ -78,9 +78,9 @@ class Teacher extends User
     /**
      * Remove classrooms
      *
-     * @param \AppBundle\Entity\Classroom $classrooms
+     * @param Classroom $classrooms
      */
-    public function removeClassroom(\AppBundle\Entity\Classroom $classrooms)
+    public function removeClassroom(Classroom $classrooms)
     {
         $this->classrooms->removeElement($classrooms);
     }

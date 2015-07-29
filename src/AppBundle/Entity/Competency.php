@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,19 +32,19 @@ class Competency
     /**
      * @var integer
      *
-     * @ORM\Column(name="currentGrade", type="smallint")
+     * @ORM\Column(type="smallint")
      */
-    private $currentGrade;
+    private $minRange;
 
     /**
-     * @var Activity
-     * @ORM\ManyToOne(targetEntity="Activity", inversedBy="competencies")
+     * @var integer
+     *
+     * @ORM\Column(type="smallint")
      */
-    protected $activity;
+    private $maxRange;
 
     public function __construct()
     {
-        $this->currentGrade = 0;
     }
 
     /**
@@ -80,43 +81,39 @@ class Competency
     }
 
     /**
-     * Set currentGrade
-     *
-     * @param integer $currentGrade
-     * @return Competency
+     * @return int
      */
-    public function setCurrentGrade($currentGrade)
+    public function getMinRange()
     {
-        $this->currentGrade = $currentGrade;
+        return $this->minRange;
+    }
+
+    /**
+     * @param int $minRange
+     * @return $this
+     */
+    public function setMinRange($minRange)
+    {
+        $this->minRange = $minRange;
 
         return $this;
     }
 
     /**
-     * Get currentGrade
-     *
-     * @return integer 
+     * @return int
      */
-    public function getCurrentGrade()
+    public function getMaxRange()
     {
-        return $this->currentGrade;
+        return $this->maxRange;
     }
 
     /**
-     * @return Activity
-     */
-    public function getActivity()
-    {
-        return $this->activity;
-    }
-
-    /**
-     * @param Activity $activity
+     * @param int $maxRange
      * @return $this
      */
-    public function setActivity(Activity $activity)
+    public function setMaxRange($maxRange)
     {
-        $this->activity = $activity;
+        $this->maxRange = $maxRange;
 
         return $this;
     }

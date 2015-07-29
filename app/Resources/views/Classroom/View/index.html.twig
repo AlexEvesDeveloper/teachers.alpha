@@ -1,8 +1,54 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <h1>{{ classroom.name }}</h1>
-    <a href="{{ path('app_classroom_update_index', {'id' : classroom.id}) }}">Edit this classroom</a>
+    <h1 id="classroom-title" data-name="name" contenteditable="true"> {{ classroom.name }}</h1>
+
+    {% if classroom.learningCardTemplate is null %}
+        <p>You have not created a learning template for this classroom, would you like to create one now?</p>
+        <a href="{{ path('app_learningcardtemplate_create_index', {'id' : classroom.id}) }}">Create learning card</a>
+    {% else %}
+        <a href="{{ path('app_learningcardtemplate_view_index', {'id' : classroom.id}) }}">View learning card</a>
+    {% endif %}
+
+    {#<a href="{{ path('app_classroom_update_index', {'id' : classroom.id}) }}">Edit this classroom</a>#}
     <a href="{{ path('app_classroom_delete_index', {'id' : classroom.id}) }}">Delete this classroom</a>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        document.addEventListener('keydown', function (event) {
+            var esc = event.which == 27,
+                    nl = event.which == 13,
+                    el = event.target,
+                    input = el.nodeName != 'INPUT' && el.nodeName != 'TEXTAREA',
+                    data = {};
+
+            if (input) {
+                if (esc) {
+                    // restore state
+                    document.execCommand('undo');
+                    el.blur();
+                } else if (nl) {
+                    // save
+                    data[el.getAttribute('data-name')] = el.innerHTML;
+
+                    console.dir(JSON.stringify(data));
+
+                     $.ajax({
+                     url: "{{ path('app_classroom_update_index', {'id' : classroom.id}) }}",
+                     data: data,
+                     type: 'post'
+                     });
+
+                    //log(JSON.stringify(data));
+
+                    el.blur();
+                    event.preventDefault();
+                }
+            }
+        }, true);
+    </script>
 {% endblock %}

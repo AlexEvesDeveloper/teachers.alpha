@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Classroom
  *
- * @ORM\Table(name="classroom")
+ * @ORM\Table()
  * @ORM\Entity
  */
 class Classroom
@@ -34,6 +34,13 @@ class Classroom
      * @ORM\ManyToOne(targetEntity="Teacher", inversedBy="classrooms")
      */
     private $teacher;
+
+    /**
+     * @var LearningCardTemplate
+     *
+     * @ORM\ManyToOne(targetEntity="LearningCardTemplate", inversedBy="classrooms", cascade={"persist"})
+     */
+    private $learningCardTemplate;
 
     /**
      * Get id
@@ -89,5 +96,24 @@ class Classroom
     public function getTeacher()
     {
         return $this->teacher;
+    }
+
+    /**
+     * @return LearningCardTemplate
+     */
+    public function getLearningCardTemplate()
+    {
+        return $this->learningCardTemplate;
+    }
+
+    /**
+     * @param LearningCardTemplate $learningCardTemplate
+     * @return $this
+     */
+    public function setLearningCardTemplate($learningCardTemplate)
+    {
+        $this->learningCardTemplate = $learningCardTemplate;
+
+        return $this;
     }
 }

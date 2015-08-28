@@ -23,11 +23,26 @@ class Student extends User
      */
     protected $id;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Student", mappedBy="classrooms")
+     */
+    protected $classrooms;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="LearningCard", mappedBy="student")
+     */
+    protected $learningCards;
+
     public function __construct()
     {
         parent::__construct();
 
-        $this->activities = new ArrayCollection();
+        $this->classrooms = new ArrayCollection();
+        $this->learningCards = new ArrayCollection();
     }
 
     /**
@@ -38,5 +53,65 @@ class Student extends User
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getClassrooms()
+    {
+        return $this->classrooms;
+    }
+
+    /**
+     * @param Classroom $classroom
+     * @return $this
+     */
+    public function addClassroom(Classroom $classroom)
+    {
+        $this->classrooms->add($classroom);
+
+        return $this;
+    }
+
+    /**
+     * @param Classroom $classroom
+     * @return $this
+     */
+    public function removeClassroom(Classroom $classroom)
+    {
+        $this->classrooms->removeElement($classroom);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getLearningCards()
+    {
+        return $this->learningCards;
+    }
+
+    /**
+     * @param LearningCard $learningCard
+     * @return $this
+     */
+    public function addLearningCard(LearningCard $learningCard)
+    {
+        $this->learningCards->add($learningCard);
+
+        return $this;
+    }
+
+    /**
+     * @param LearningCard $learningCard
+     * @return $this
+     */
+    public function removeLearningCard(LearningCard $learningCard)
+    {
+        $this->learningCards->removeElement($learningCard);
+
+        return $this;
     }
 }

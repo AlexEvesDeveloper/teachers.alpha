@@ -56,6 +56,16 @@ class LearningCardTemplate
     }
 
     /**
+     * Get classrooms
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getClassrooms()
+    {
+        return $this->classrooms;
+    }
+
+    /**
      * Add classrooms
      *
      * @param Classroom $classrooms
@@ -72,20 +82,23 @@ class LearningCardTemplate
      * Remove classrooms
      *
      * @param Classroom $classrooms
+     * @return $this
      */
     public function removeClassroom(Classroom $classrooms)
     {
         $this->classrooms->removeElement($classrooms);
+
+        return $this;
     }
 
     /**
-     * Get classrooms
+     * Get competencies
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getClassrooms()
+    public function getCompetencies()
     {
-        return $this->classrooms;
+        return $this->competencies;
     }
 
     /**
@@ -105,19 +118,12 @@ class LearningCardTemplate
      * Remove competencies
      *
      * @param Competency $competencies
+     * @return $this
      */
     public function removeCompetency(Competency $competencies)
     {
         $this->competencies->removeElement($competencies);
-    }
 
-    /**
-     * Get competencies
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getCompetencies()
-    {
-        return $this->competencies;
+        return $this;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,21 @@ class Classroom
      * @ORM\ManyToOne(targetEntity="LearningCardTemplate", inversedBy="classrooms", cascade={"persist"})
      */
     private $learningCardTemplate;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Student", inversedBy="students")
+     */
+    private $students;
+
+    /**
+     * Classroom constructor.
+     */
+    public function __construct()
+    {
+        $this->students = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -115,5 +131,29 @@ class Classroom
         $this->learningCardTemplate = $learningCardTemplate;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getStudents()
+    {
+        return $this->students;
+    }
+
+    /**
+     * @param Student $student
+     */
+    public function addStudent(Student $student)
+    {
+        $this->students->add($student);
+    }
+
+    /**
+     * @param Student $student
+     */
+    public function removeStudent(Student $student)
+    {
+        $this->students->removeElement($student);
     }
 }
